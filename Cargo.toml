@@ -6,19 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-diesel = { version = "2.0.0", features = ["postgres"] }
+diesel = { version = "2.0.0", features = ["postgres", "chrono"] }
 dotenvy = "0.15"
-axum = "0.6.1"
-rocket = "0.4.11"
-rocket_codegen = "0.4.11"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1"
-rocket_contrib = "0.4.11"
-tracing-subscriber = { version = "0.3", default-features = false }
-hyper = { version = "0.14.23", features = ["full"] }
 tokio = { version = "1.23.0", features = ["full"] }
 tower = "0.4.13"
 actix = "0.13.0"
 actix-web = "4"
-futures-util = "0.3.25"
-# rocket_dyn_templates = "0.1.0-rc.2"
+actix-cors = "0.6.4" 
+chrono = {version="0.4.23", features=["serde"]}
