@@ -2,9 +2,12 @@ use actix_web::{ get, post, delete, Responder, web::{self, Json}};
 use diesel::PgConnection;
 use serde::{Serialize, Deserialize};
 
-use crate::database::establish_connection;
-use crate::models::cars::Cars;
-use crate::repos::cars_repo::{get_all_type, create_new_car, delete_type};
+use crate::{
+    database::establish_connection,
+    models::cars::Cars,
+    repos::cars_repo::{get_all_type, create_new_car, delete_type},
+};
+
 
 #[derive(Deserialize, Serialize)]
 pub struct CarPayload {

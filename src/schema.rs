@@ -16,6 +16,15 @@ diesel::table! {
 }
 
 diesel::table! {
+    posts (id) {
+        id -> Int4,
+        title -> Varchar,
+        body -> Text,
+        published -> Bool,
+    }
+}
+
+diesel::table! {
     reservations (id) {
         id -> Int4,
         vehicle_type_id -> Int4,
@@ -65,6 +74,7 @@ diesel::joinable!(return_reservation -> users (user_id));
 diesel::allow_tables_to_appear_in_same_query!(
     cars,
     locations,
+    posts,
     reservations,
     return_reservation,
     user_detail,

@@ -1,5 +1,5 @@
 use diesel::prelude::*;
-use chrono::{NaiveDateTime};
+use chrono::NaiveDateTime;
 use serde::Serialize;
 
 use crate::schema::reservations;
@@ -15,12 +15,12 @@ pub struct Reservation {
     pub return_date: NaiveDateTime
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, AsChangeset)]
 #[diesel(table_name = reservations)]
 pub struct NewReservation<'a> {
-    pub vehicle_type_id: &'a i32,
-    pub region_id: &'a i32,
-    pub user_id: &'a i32,
-    pub pickup_date: &'a NaiveDateTime,
-    pub return_date: &'a NaiveDateTime
+    pub vehicle_type_id: Option<&'a i32>,
+    pub region_id: Option<&'a i32>,
+    pub user_id: Option<&'a i32>,
+    pub pickup_date: Option<NaiveDateTime>,
+    pub return_date: Option<NaiveDateTime>
 }

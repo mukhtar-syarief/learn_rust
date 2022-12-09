@@ -1,4 +1,4 @@
-use diesel::prelude::*;
+use diesel::{prelude::*};
 
 use crate::models::cars::{NewCars, Cars};
 

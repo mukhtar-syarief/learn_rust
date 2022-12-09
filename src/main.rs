@@ -1,4 +1,4 @@
-use actix_web::{HttpServer, App, web::{self}};
+use actix_web::{HttpServer, App, web};
 use actix_cors::Cors;
 
 pub mod database;
@@ -27,7 +27,17 @@ use crate::apis::{
         get_loc,
     },
     reservation_api::{
-        get_reservation
+        get_reservations,
+        create_user_reservation,
+        edit_this_reservation,
+        delete_this_reservation,
+    },
+    invoice_api::{
+        create_return_reservation,
+        get_return_reservations,
+        get_return_reservation,
+        edit_return_reservation,
+        delete_return_reservation
     }
 };
 
@@ -73,7 +83,18 @@ async fn main() -> std::io::Result<()> {
             )
             .service(
                 web::scope("/reservation")
-                    .service(get_reservation)
+                    .service(get_reservations)
+                    .service(create_user_reservation)
+                    .service(edit_this_reservation)
+                    .service(delete_this_reservation)
+            )
+            .service(
+                web::scope("/invoice")
+                    .service(create_return_reservation)
+                    .service(get_return_reservations)
+                    .service(get_return_reservation)
+                    .service(edit_return_reservation)
+                    .service(delete_return_reservation)
             )
             }
         )
