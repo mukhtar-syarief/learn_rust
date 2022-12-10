@@ -21,6 +21,14 @@ pub struct MessageResponse {
 } 
 
 
+#[utoipa::path(
+    get,
+    path = "/location",
+    responses(
+        (status = 200, description = "Success get all location.", body = [Location]),
+        (status = 404, description = "Trouble with API.")
+    )
+)]
 #[get("")]
 pub async fn get_locations() -> actix_web::Result<impl Responder>{
     let conn = &mut establish_connection();
@@ -28,6 +36,16 @@ pub async fn get_locations() -> actix_web::Result<impl Responder>{
     Ok(Json(locs))
 }
 
+
+#[utoipa::path(
+    post,
+    path = "/location",
+    responses(
+        (status = 200, description = "Success create new location.", body = Location),
+        (status = 404, description = "Trouble with API.")
+    ),
+    request_body = NewLoc,
+)]
 #[post("")]
 pub async fn create_location(payload: Json<NewLoc>) -> actix_web::Result<impl Responder> {
     let conn = &mut establish_connection();
@@ -35,6 +53,17 @@ pub async fn create_location(payload: Json<NewLoc>) -> actix_web::Result<impl Re
     Ok(Json(loc))
 }
 
+#[utoipa::path(
+    get,
+    path = "/location/{id}",
+    responses(
+        (status = 200, description = "Success get location.", body = Location),
+        (status = 404, description = "Trouble with API.")
+    ),
+    params(
+        ("id", description = "id of location you want to see.")
+    )
+)]
 #[get("/{id}")]
 pub async fn get_loc(id: web::Path<i32>) -> actix_web::Result<impl Responder> {
     let conn = &mut establish_connection();
@@ -42,7 +71,17 @@ pub async fn get_loc(id: web::Path<i32>) -> actix_web::Result<impl Responder> {
     Ok(Json(loc))
 }
 
-
+#[utoipa::path(
+    delete,
+    path = "/location/{id}",
+    responses(
+        (status = 200, description = "Success delete location.", body = MessageResponse),
+        (status = 404, description = "Trouble with API.")
+    ),
+    params(
+        ("id", description = "id of location you want to delete.")
+    )
+)]
 #[delete("/{id}")]
 pub async fn delete_loc(id: web::Path<i32>) -> actix_web::Result<impl Responder> {
     let conn = &mut establish_connection();

@@ -1,10 +1,12 @@
 use diesel::prelude::*;
 use serde::Serialize;
+use utoipa::ToSchema;
 
 use crate::schema::locations;
 
 #[derive(Queryable)]
 #[derive(Serialize)]
+#[derive(ToSchema)]
 pub struct Location {
     pub id: i32,
     pub region: String

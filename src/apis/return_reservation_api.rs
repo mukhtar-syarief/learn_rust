@@ -10,6 +10,7 @@ use actix_web::{
     delete
 };
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 use crate::{
     models::{
@@ -29,6 +30,7 @@ pub struct MessageResponse {
 }
 
 #[derive(Serialize, Deserialize)]
+#[derive(ToSchema)]
 pub struct InvoicePayload {
     user_id: i32,
     region_id: i32,
@@ -38,12 +40,33 @@ pub struct InvoicePayload {
 }
 
 #[derive(Serialize, Deserialize)]
+#[derive(ToSchema)]
 pub struct UserInvoice {
     pub username: String,
     pub invoice_id: i32
 }
 
-
+#[utoipa::path(
+    get,
+    path = "/invoice/{username}",
+    responses (
+        (
+            status = 200,
+            description = "Succes",
+            body = [ReturnReservation]
+        ),
+        (
+            status = 404,
+            description = "Failed"
+        )
+    ),
+    params(
+        (
+            "username",
+            description = "To identify that invoice is right user owned."
+        )
+    )
+)]
 #[get("/{username}")]
 pub async fn get_return_reservations(username: Path<String>) -> impl Responder {
     let conn = &mut establish_connection();
@@ -52,6 +75,27 @@ pub async fn get_return_reservations(username: Path<String>) -> impl Responder {
     Json(invoices)
 }
 
+#[utoipa::path(
+    post,
+    path = "/invoice/{username}",
+    responses (
+        (
+            status = 200,
+            description = "Succes",
+            body = ReturnReservation
+        ),
+        (
+            status = 404,
+            description = "Failed"
+        )
+    ),
+    params(
+        (
+            "username",
+            description = "To identify that invoice is gived to right user."
+        )
+    )
+)]
 #[post("/{username}")]
 pub async fn create_return_reservation(username: Path<String>, payload: Json<InvoicePayload>) -> impl Responder {
     let conn = &mut establish_connection();
@@ -69,6 +113,32 @@ pub async fn create_return_reservation(username: Path<String>, payload: Json<Inv
     Json(invoice)
 }
 
+
+#[utoipa::path(
+    get,
+    path = "/invoice/{username}/{invoice_id}",
+    responses (
+        (
+            status = 200,
+            description = "Succes",
+            body = ReturnReservation
+        ),
+        (
+            status = 404,
+            description = "Failed"
+        )
+    ),
+    params(
+        (
+            "username",
+            description = "To identify that invoice is right user owned."
+        ),
+        (
+            "invoice_id",
+            description = "To get specify of invoice from user want to see."
+        )
+    )
+)]
 #[get("/{username}/{invoice_id}")]
 pub async fn get_return_reservation(path: Path<UserInvoice>) -> impl Responder {
     let conn = &mut establish_connection();
@@ -77,6 +147,32 @@ pub async fn get_return_reservation(path: Path<UserInvoice>) -> impl Responder {
     Json(invoice)
 }
 
+
+#[utoipa::path(
+    put,
+    path = "/invoice/{username}/{invoice_id}",
+    responses (
+        (
+            status = 200,
+            description = "Succes",
+            body = MessageResponse
+        ),
+        (
+            status = 404,
+            description = "Failed"
+        )
+    ),
+    params(
+        (
+            "username",
+            description = "To identify that invoice is right user owned."
+        ),
+        (
+            "invoice_id",
+            description = "To get specify of invoice from user want to edit."
+        )
+    )
+)]
 #[put("/{username}/{invoice_id}")]
 pub async fn edit_return_reservation(path: Path<UserInvoice>, payload: Json<InvoicePayload>) -> impl Responder {
     let conn = &mut establish_connection();
@@ -99,6 +195,32 @@ pub async fn edit_return_reservation(path: Path<UserInvoice>, payload: Json<Invo
     )
 }
 
+
+#[utoipa::path(
+    delete,
+    path = "/invoice/{username}/{invoice_id}",
+    responses (
+        (
+            status = 200,
+            description = "Succes",
+            body = MessageResponse
+        ),
+        (
+            status = 404,
+            description = "Failed"
+        )
+    ),
+    params(
+        (
+            "username",
+            description = "To identify that invoice is right user owned."
+        ),
+        (
+            "invoice_id",
+            description = "To get specify of invoice from user want to remove."
+        )
+    )
+)]
 #[delete("/{username}/{invoice_id}")]
 pub async fn delete_return_reservation(path: Path<UserInvoice>) -> impl Responder {
     let conn = &mut establish_connection();

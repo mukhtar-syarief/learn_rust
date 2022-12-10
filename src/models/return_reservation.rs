@@ -1,11 +1,13 @@
 use chrono::NaiveDate;
 use diesel::prelude::*;
 use serde::Serialize;
+use utoipa::ToSchema;
 
 use crate::schema::return_reservation;
 
 #[derive(Queryable)]
 #[derive(Serialize)]
+#[derive(ToSchema)]
 pub struct ReturnReservation {
     pub id: i32,
     pub user_id: i32,

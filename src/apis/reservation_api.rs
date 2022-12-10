@@ -3,6 +3,7 @@ use diesel::PgConnection;
 use serde::{Serialize, Deserialize};
 use chrono::{NaiveDateTime};
 use diesel::prelude::*;
+use utoipa::ToSchema;
 
 use crate::{
     database::establish_connection, 
@@ -14,11 +15,13 @@ use crate::{
 };
 
 #[derive(Serialize, Deserialize)]
+#[derive(ToSchema)]
 pub struct MessageResponse {
     message: String
 } 
 
 #[derive(Serialize, Deserialize)]
+#[derive(ToSchema)]
 pub struct ReservationPayload {
     pub vehicle_type_id: i32,
     pub region_id: i32,
@@ -27,6 +30,27 @@ pub struct ReservationPayload {
 }
 
 
+#[utoipa::path(
+    get,
+    path = "/reservation/{username}",
+    responses(
+        (
+            status = 200,
+            description = "Success",
+            body = [Reservation]
+        ),
+        (
+            status = 404,
+            description = "Fail"
+        )
+    ),
+    params(
+        (
+            "username",
+            description = "username of user to check reservation baser user."
+        )
+    )
+)]
 #[get("/{username}")]
 pub async fn get_reservations(username: web::Path<String>) -> actix_web::Result<impl Responder> {
     let conn: &mut PgConnection = &mut establish_connection();
@@ -36,6 +60,29 @@ pub async fn get_reservations(username: web::Path<String>) -> actix_web::Result<
     Ok(Json(user_reservation))
 }
 
+
+#[utoipa::path(
+    post,
+    path = "/reservation/{username}",
+    responses(
+        (
+            status = 200,
+            description = "Success",
+            body = Reservation
+        ),
+        (
+            status = 404,
+            description = "Fail"
+        )
+    ),
+    params(
+        (
+            "username",
+            description = "username of user to check reservation baser user."
+        )
+    ),
+    request_body = ReservationPayload,
+)]
 #[post("/{username}")]
 pub async fn create_user_reservation(username: web::Path<String>, payload: Json<ReservationPayload>) -> actix_web::Result<impl Responder> {
     let conn = &mut establish_connection();
@@ -58,11 +105,38 @@ pub async fn create_user_reservation(username: web::Path<String>, payload: Json<
 
 
 #[derive(Serialize, Deserialize)]
+#[derive(ToSchema)]
 pub struct UserReservation {
     pub username: String,
     pub reservation_id: i32
 }
 
+
+#[utoipa::path(
+    get,
+    path = "/reservation/{username}/{reservation_id}",
+    responses(
+        (
+            status = 200,
+            description = "Success",
+            body = Reservation
+        ),
+        (
+            status = 404,
+            description = "Fail"
+        )
+    ),
+    params(
+        (
+            "username",
+            description = "username of user to check reservation baser user."
+        ),
+        (
+            "reservation_id",
+            description = "id for get specific of reservation."
+        )
+    )
+)]
 #[get("/{username}/{reservation_id}")]
 pub async fn get_reservation(
     path: web::Path<UserReservation>
@@ -76,6 +150,32 @@ pub async fn get_reservation(
     Ok(Json(reservation))
 }
 
+#[utoipa::path(
+    put,
+    path = "/reservation/{username}/{reservation_id}",
+    responses(
+        (
+            status = 200,
+            description = "Success",
+            body = MessageResponse
+        ),
+        (
+            status = 404,
+            description = "Fail"
+        )
+    ),
+    params(
+        (
+            "username",
+            description = "username of user to check reservation baser user."
+        ),
+        (
+            "reservation_id",
+            description = "id for get specific of reservation."
+        )
+    ),
+    request_body = ReservationPayload
+)]
 #[put("/{username}/{reservation_id}")]
 pub async fn edit_this_reservation(
     path: web::Path<UserReservation>,
@@ -107,6 +207,31 @@ pub async fn edit_this_reservation(
     ))
 }
 
+#[utoipa::path(
+    delete,
+    path = "/reservation/{username}/{reservation_id}",
+    responses(
+        (
+            status = 200,
+            description = "Success",
+            body = Reservation
+        ),
+        (
+            status = 404,
+            description = "Fail"
+        )
+    ),
+    params(
+        (
+            "username",
+            description = "username of user to check reservation baser user."
+        ),
+        (
+            "reservation_id",
+            description = "id for get specific of reservation."
+        )
+    )
+)]
 #[delete("/{username}/{reservation_id}")]
 pub async fn delete_this_reservation(path: web::Path<UserReservation>) -> impl Responder{
     let conn = &mut establish_connection();

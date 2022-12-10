@@ -1,11 +1,13 @@
 use diesel::prelude::*;
 use chrono::NaiveDateTime;
 use serde::Serialize;
+use utoipa::ToSchema;
 
 use crate::schema::reservations;
 
 #[derive(Queryable)]
 #[derive(Serialize)]
+#[derive(ToSchema)]
 pub struct Reservation {
     pub id: i32,
     pub vehicle_type_id: i32,

@@ -1,12 +1,16 @@
 use actix_web::{HttpServer, App, web};
 use actix_cors::Cors;
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
 
 pub mod database;
 pub mod repos;
 pub mod models;
 pub mod schema;
 pub mod apis;
+pub mod documentation;
 
+use  documentation::ApiDoc;
 use crate::apis::{
     user::{
         create_user, 
@@ -32,7 +36,7 @@ use crate::apis::{
         edit_this_reservation,
         delete_this_reservation,
     },
-    invoice_api::{
+    return_reservation_api::{
         create_return_reservation,
         get_return_reservations,
         get_return_reservation,
@@ -95,6 +99,10 @@ async fn main() -> std::io::Result<()> {
                     .service(get_return_reservation)
                     .service(edit_return_reservation)
                     .service(delete_return_reservation)
+            )
+            .service(
+                SwaggerUi::new("/docs/{_:.*}")
+                .url("/api-doc/openapi.json", ApiDoc::openapi()),
             )
             }
         )

@@ -1,11 +1,13 @@
 use diesel::prelude::*;
 use serde::Serialize;
+use utoipa::ToSchema;
 
 use crate::schema::users;
 
 
 #[derive(Queryable)]
 #[derive(Serialize)]
+#[derive(ToSchema)]
 pub struct Users {
     pub id: i32,
     pub username: String,
