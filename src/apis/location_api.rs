@@ -6,11 +6,13 @@ use actix_web::{
     Responder
 };
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 use crate::database::establish_connection;
 use crate::models::location::Location;
 
 #[derive(Serialize, Deserialize)]
+#[derive(ToSchema)]
 pub struct NewLoc {
     region: String
 }
@@ -27,7 +29,8 @@ pub struct MessageResponse {
     responses(
         (status = 200, description = "Success get all location.", body = [Location]),
         (status = 404, description = "Trouble with API.")
-    )
+    ),
+    tag = "Location API",
 )]
 #[get("")]
 pub async fn get_locations() -> actix_web::Result<impl Responder>{
@@ -40,11 +43,13 @@ pub async fn get_locations() -> actix_web::Result<impl Responder>{
 #[utoipa::path(
     post,
     path = "/location",
+    operation_id = "Create Location",
     responses(
         (status = 200, description = "Success create new location.", body = Location),
         (status = 404, description = "Trouble with API.")
     ),
     request_body = NewLoc,
+    tag = "Location API",
 )]
 #[post("")]
 pub async fn create_location(payload: Json<NewLoc>) -> actix_web::Result<impl Responder> {
@@ -56,13 +61,15 @@ pub async fn create_location(payload: Json<NewLoc>) -> actix_web::Result<impl Re
 #[utoipa::path(
     get,
     path = "/location/{id}",
+    operation_id = "Get Location",
     responses(
         (status = 200, description = "Success get location.", body = Location),
         (status = 404, description = "Trouble with API.")
     ),
     params(
         ("id", description = "id of location you want to see.")
-    )
+    ),
+    tag = "Location API",
 )]
 #[get("/{id}")]
 pub async fn get_loc(id: web::Path<i32>) -> actix_web::Result<impl Responder> {
@@ -74,13 +81,15 @@ pub async fn get_loc(id: web::Path<i32>) -> actix_web::Result<impl Responder> {
 #[utoipa::path(
     delete,
     path = "/location/{id}",
+    operation_id = "Delete Location",
     responses(
         (status = 200, description = "Success delete location.", body = MessageResponse),
         (status = 404, description = "Trouble with API.")
     ),
     params(
         ("id", description = "id of location you want to delete.")
-    )
+    ),
+    tag = "Location API",
 )]
 #[delete("/{id}")]
 pub async fn delete_loc(id: web::Path<i32>) -> actix_web::Result<impl Responder> {

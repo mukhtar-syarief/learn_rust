@@ -1,4 +1,5 @@
-use utoipa::OpenApi;
+use serde::{Serialize, Deserialize};
+use utoipa::{OpenApi, ToSchema};
 
 use crate::{
     apis::{
@@ -18,6 +19,26 @@ use crate::{
     }
 };
 
+
+#[derive(Serialize, Deserialize)]
+#[derive(ToSchema)]
+pub struct NaiveDate {
+    ymdf: i32,
+}
+
+#[derive(Serialize, Deserialize)]
+#[derive(ToSchema)]
+pub struct NaiveTime {
+    secs: i32,
+    frac: i32,
+}
+
+#[derive(Serialize, Deserialize)]
+#[derive(ToSchema)]
+pub struct NaiveDateTime {
+    date: NaiveDate,
+    time: NaiveTime
+}
 
 #[derive(OpenApi)]
 #[openapi(
@@ -52,32 +73,36 @@ use crate::{
             cars_api::CarPayload,
             reservation_api::ReservationPayload,
             invoice_api::InvoicePayload,
+            location_api::NewLoc,
             user_model::Users,
             cars_model::Cars,
             location_model::Location,
             reservation_model::Reservation,
-            invoice_model::ReturnReservation
+            invoice_model::ReturnReservation,
+            NaiveDateTime,
+            NaiveDate,
+            NaiveTime
         )
     ),
     tags(
         (
-            name = "users_api", 
+            name = "User API", 
             description = "This API use to manage user. Inside this is Api to get all user or only one user, create new user, update data of user, also to delete."
         ),
-        (
-            name = "cars_api", 
+        (   
+            name = "Cars API", 
             description = "This API is use to get all type of car and register new type. Also in this api can update if you insert wrong type car or you choose to delete type from the list."
         ),
         (
-            name = "location_api", 
+            name = "Location API", 
             description = "API to manage location. You want to get location data or register new location can use this API."
         ),
         (
-            name = "reservation_api",
+            name = "Reservation API",
             description = "Reservation or invoice API to display detail reservation of user. You can manage invoice arround CRUD in this API."
         ),
         (
-            name = "invoice_api",
+            name = "Invoice API",
             description = "This API use to give invoice to user was reservation."
         )
     ),

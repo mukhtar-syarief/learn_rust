@@ -33,6 +33,7 @@ pub struct ReservationPayload {
 #[utoipa::path(
     get,
     path = "/reservation/{username}",
+    operation_id = "Get All Reservation",
     responses(
         (
             status = 200,
@@ -49,7 +50,8 @@ pub struct ReservationPayload {
             "username",
             description = "username of user to check reservation baser user."
         )
-    )
+    ),
+    tag = "Reservation API",
 )]
 #[get("/{username}")]
 pub async fn get_reservations(username: web::Path<String>) -> actix_web::Result<impl Responder> {
@@ -64,6 +66,7 @@ pub async fn get_reservations(username: web::Path<String>) -> actix_web::Result<
 #[utoipa::path(
     post,
     path = "/reservation/{username}",
+    operation_id = "Create Reservation",
     responses(
         (
             status = 200,
@@ -82,6 +85,7 @@ pub async fn get_reservations(username: web::Path<String>) -> actix_web::Result<
         )
     ),
     request_body = ReservationPayload,
+    tag = "Reservation API",
 )]
 #[post("/{username}")]
 pub async fn create_user_reservation(username: web::Path<String>, payload: Json<ReservationPayload>) -> actix_web::Result<impl Responder> {
@@ -115,6 +119,7 @@ pub struct UserReservation {
 #[utoipa::path(
     get,
     path = "/reservation/{username}/{reservation_id}",
+    operation_id = "Get Reservation",
     responses(
         (
             status = 200,
@@ -135,7 +140,8 @@ pub struct UserReservation {
             "reservation_id",
             description = "id for get specific of reservation."
         )
-    )
+    ),
+    tag = "Reservation API",
 )]
 #[get("/{username}/{reservation_id}")]
 pub async fn get_reservation(
@@ -153,6 +159,7 @@ pub async fn get_reservation(
 #[utoipa::path(
     put,
     path = "/reservation/{username}/{reservation_id}",
+    operation_id = "Edit Reservation",
     responses(
         (
             status = 200,
@@ -174,7 +181,8 @@ pub async fn get_reservation(
             description = "id for get specific of reservation."
         )
     ),
-    request_body = ReservationPayload
+    request_body = ReservationPayload,
+    tag = "Reservation API",
 )]
 #[put("/{username}/{reservation_id}")]
 pub async fn edit_this_reservation(
@@ -210,6 +218,7 @@ pub async fn edit_this_reservation(
 #[utoipa::path(
     delete,
     path = "/reservation/{username}/{reservation_id}",
+    operation_id = "Delete Reservation",
     responses(
         (
             status = 200,
@@ -230,7 +239,8 @@ pub async fn edit_this_reservation(
             "reservation_id",
             description = "id for get specific of reservation."
         )
-    )
+    ),
+    tag = "Reservation API",
 )]
 #[delete("/{username}/{reservation_id}")]
 pub async fn delete_this_reservation(path: web::Path<UserReservation>) -> impl Responder{

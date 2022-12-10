@@ -49,6 +49,7 @@ pub struct UserInvoice {
 #[utoipa::path(
     get,
     path = "/invoice/{username}",
+    operation_id = "Get All Invoice",
     responses (
         (
             status = 200,
@@ -65,7 +66,8 @@ pub struct UserInvoice {
             "username",
             description = "To identify that invoice is right user owned."
         )
-    )
+    ),
+    tag = "Invoice API",
 )]
 #[get("/{username}")]
 pub async fn get_return_reservations(username: Path<String>) -> impl Responder {
@@ -78,6 +80,7 @@ pub async fn get_return_reservations(username: Path<String>) -> impl Responder {
 #[utoipa::path(
     post,
     path = "/invoice/{username}",
+    operation_id = "Create Invoice",
     responses (
         (
             status = 200,
@@ -94,7 +97,8 @@ pub async fn get_return_reservations(username: Path<String>) -> impl Responder {
             "username",
             description = "To identify that invoice is gived to right user."
         )
-    )
+    ),
+    tag = "Invoice API",
 )]
 #[post("/{username}")]
 pub async fn create_return_reservation(username: Path<String>, payload: Json<InvoicePayload>) -> impl Responder {
@@ -117,6 +121,7 @@ pub async fn create_return_reservation(username: Path<String>, payload: Json<Inv
 #[utoipa::path(
     get,
     path = "/invoice/{username}/{invoice_id}",
+    operation_id = "Get Invoice",
     responses (
         (
             status = 200,
@@ -137,7 +142,8 @@ pub async fn create_return_reservation(username: Path<String>, payload: Json<Inv
             "invoice_id",
             description = "To get specify of invoice from user want to see."
         )
-    )
+    ),
+    tag = "Invoice API",
 )]
 #[get("/{username}/{invoice_id}")]
 pub async fn get_return_reservation(path: Path<UserInvoice>) -> impl Responder {
@@ -151,6 +157,7 @@ pub async fn get_return_reservation(path: Path<UserInvoice>) -> impl Responder {
 #[utoipa::path(
     put,
     path = "/invoice/{username}/{invoice_id}",
+    operation_id = "Edit Invoice",
     responses (
         (
             status = 200,
@@ -171,7 +178,8 @@ pub async fn get_return_reservation(path: Path<UserInvoice>) -> impl Responder {
             "invoice_id",
             description = "To get specify of invoice from user want to edit."
         )
-    )
+    ),
+    tag = "Invoice API",
 )]
 #[put("/{username}/{invoice_id}")]
 pub async fn edit_return_reservation(path: Path<UserInvoice>, payload: Json<InvoicePayload>) -> impl Responder {
@@ -199,6 +207,7 @@ pub async fn edit_return_reservation(path: Path<UserInvoice>, payload: Json<Invo
 #[utoipa::path(
     delete,
     path = "/invoice/{username}/{invoice_id}",
+    operation_id = "Delete invoice",
     responses (
         (
             status = 200,
@@ -219,7 +228,8 @@ pub async fn edit_return_reservation(path: Path<UserInvoice>, payload: Json<Invo
             "invoice_id",
             description = "To get specify of invoice from user want to remove."
         )
-    )
+    ),
+    tag = "Invoice API",
 )]
 #[delete("/{username}/{invoice_id}")]
 pub async fn delete_return_reservation(path: Path<UserInvoice>) -> impl Responder {

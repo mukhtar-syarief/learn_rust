@@ -23,10 +23,12 @@ pub struct UserAuth {
 #[utoipa::path(
     get,
     path = "/user",
+    operation_id= "Get All User",
     responses(
         (status = 200, description = "Success get all user.", body = [Users]),
         (status = 404, description = "Trouble with API.")
-    )
+    ),
+    tag = "User API"
 )]
 #[get("")]
 pub async fn get_all_user() -> actix_web::Result<impl Responder> {
@@ -41,11 +43,13 @@ pub async fn get_all_user() -> actix_web::Result<impl Responder> {
 #[utoipa::path(
     post,
     path = "/user",
+    operation_id = "Create User",
     responses(
         (status = 200, description = "Use this path to create user.", body = Users),
         (status = 404, description = "Trouble with API.")
     ),
-    request_body = UserAuth
+    request_body = UserAuth,
+    tag = "User API"
 )]
 #[post("")]
 pub async fn create_user(payload: web::Json<UserAuth>) -> actix_web::Result<impl Responder>{
@@ -60,13 +64,15 @@ pub async fn create_user(payload: web::Json<UserAuth>) -> actix_web::Result<impl
 #[utoipa::path(
     get,
     path = "/user/{username}",
+    operation_id = "Get User",
     responses(
         (status = 200, description = "Use this path to get user.", body = Users),
         (status = 404, description = "Trouble with API.")
     ),
     params(
         ("username", description="username of user to indentify.")
-    )
+    ),
+    tag = "User API"
 )]
 #[get("/{username}")]
 pub async fn get_user(username: web::Path<String>) -> actix_web::Result<impl Responder> {
@@ -80,13 +86,15 @@ pub async fn get_user(username: web::Path<String>) -> actix_web::Result<impl Res
 #[utoipa::path(
     put,
     path = "/user/{username}",
+    operation_id = "Edit User",
     responses(
         (status = 200, description = "Use this path to edit user.", body = MessageResponse),
         (status = 404, description = "Trouble with API.")
     ),
     params(
         ("username", description="username of user to indentify.")
-    )
+    ),
+    tag = "User API"
 )]
 #[put("/{username}")]
 pub async fn update_user(username: web::Path<String>, payload: web::Json<UserAuth>) -> actix_web::Result<web::Json<MessageResponse>>{
@@ -104,13 +112,15 @@ pub async fn update_user(username: web::Path<String>, payload: web::Json<UserAut
 #[utoipa::path(
     delete,
     path = "/user/{username}",
+    operation_id = "Delete User",
     responses(
         (status = 200, description = "Use this path to delete user.", body = MessageResponse),
         (status = 404, description = "Trouble with API.")
     ),
     params(
         ("username", description="username to indentify that user will delete.")
-    )
+    ),
+    tag = "User API"
 )]
 #[delete("/{username}")]
 pub async fn delete_this_user(username: web::Path<String>) -> actix_web::Result<web::Json<MessageResponse>>{

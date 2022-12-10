@@ -1,4 +1,4 @@
-use actix_web::{HttpServer, App, web};
+use actix_web::{HttpServer, App, web, Result, HttpResponse, http::StatusCode};
 use actix_cors::Cors;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
@@ -47,6 +47,14 @@ use crate::apis::{
 
 async fn tets_api() -> String {
     format!("Hush Bajingan.!")
+}
+
+
+async fn test_redoc() -> Result<HttpResponse> {
+
+    Ok(HttpResponse::build(StatusCode::OK)
+        .content_type("text/html; charset=utf-8")
+        .body(include_str!("static/redoc.html")))
 }
 
 #[actix_web::main]
@@ -100,6 +108,7 @@ async fn main() -> std::io::Result<()> {
                     .service(edit_return_reservation)
                     .service(delete_return_reservation)
             )
+            .route("/redoc", web::get().to(test_redoc))
             .service(
                 SwaggerUi::new("/docs/{_:.*}")
                 .url("/api-doc/openapi.json", ApiDoc::openapi()),
