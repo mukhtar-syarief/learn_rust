@@ -4,3 +4,4 @@ pub mod cars;
 pub mod location;
 pub mod reservation;
 pub mod return_reservation;
+pub mod user_token;

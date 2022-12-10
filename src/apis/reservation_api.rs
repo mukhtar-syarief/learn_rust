@@ -5,13 +5,6 @@ use chrono::{NaiveDateTime};
 use diesel::prelude::*;
 
 use crate::{
-    repos::{reservation_repo::{
-        get_user_reservation,
-        create_reservation,
-        delete_reservation_by_id
-    }, 
-    users_repo::get_user_by_username, 
-    },
     database::establish_connection, 
     models::{
         reservation::{Reservation, NewReservation}, 
@@ -37,9 +30,9 @@ pub struct ReservationPayload {
 #[get("/{username}")]
 pub async fn get_reservations(username: web::Path<String>) -> actix_web::Result<impl Responder> {
     let conn: &mut PgConnection = &mut establish_connection();
-    let user: Users = get_user_by_username(conn, &username);
+    let user: Users = Users::get_user_by_username(conn, &username);
 
-    let user_reservation: Vec<Reservation> = get_user_reservation(conn, &user.id);
+    let user_reservation: Vec<Reservation> = Reservation::get_user_reservation(conn, &user.id);
     Ok(Json(user_reservation))
 }
 
@@ -50,7 +43,7 @@ pub async fn create_user_reservation(username: web::Path<String>, payload: Json<
     let user_pickup = NaiveDateTime::from_timestamp_millis(payload.pickup_date).unwrap();
     let user_return = NaiveDateTime::from_timestamp_millis(payload.return_date).unwrap();
 
-    let user = get_user_by_username(conn, &username);
+    let user = Users::get_user_by_username(conn, &username);
 
     let new_reservation = NewReservation {
         pickup_date: Some(user_pickup),
@@ -59,7 +52,7 @@ pub async fn create_user_reservation(username: web::Path<String>, payload: Json<
         user_id: Some(&user.id),
         vehicle_type_id: Some(&payload.vehicle_type_id)
     };
-    let result = create_reservation(conn, &new_reservation);
+    let result = Reservation::create_reservation(conn, &new_reservation);
     Ok(Json(result))
 }
 
@@ -75,7 +68,7 @@ pub async fn get_reservation(
     path: web::Path<UserReservation>
 ) -> actix_web::Result<impl Responder> {
     let conn = &mut establish_connection();
-    get_user_by_username(conn, &path.username);
+    Users::get_user_by_username(conn, &path.username);
 
     let reservation = reservations.filter(id.eq(&path.reservation_id))
         .first::<Reservation>(conn).expect("Kesalahan pada server");
@@ -91,7 +84,7 @@ pub async fn edit_this_reservation(
 
     let conn = &mut establish_connection();
 
-    get_user_by_username(conn, &path.username);
+    Users::get_user_by_username(conn, &path.username);
 
     let user_pickup = NaiveDateTime::from_timestamp_millis(payload.pickup_date);
     let user_return = NaiveDateTime::from_timestamp_millis(payload.return_date);
@@ -117,7 +110,7 @@ pub async fn edit_this_reservation(
 #[delete("/{username}/{reservation_id}")]
 pub async fn delete_this_reservation(path: web::Path<UserReservation>) -> impl Responder{
     let conn = &mut establish_connection();
-    delete_reservation_by_id(conn, &path.reservation_id);
+    Reservation::delete_reservation_by_id(conn, &path.reservation_id);
     Json(
         MessageResponse {
             message: "Reservasi dihapus.".to_string()

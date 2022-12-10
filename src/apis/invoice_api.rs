@@ -12,20 +12,13 @@ use actix_web::{
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    models::return_reservation::{
-        NewReturnReservation,
+    models::{
+        return_reservation::{
+            NewReturnReservation,
+            ReturnReservation
+        },
+        users::Users,
     },
-    repos::{
-        return_reservation_repo::{
-            edit_invoice,
-            get_invoices, 
-            get_invoice, 
-            delete_invoice, create_invoice
-            },
-        users_repo::{
-            get_user_by_username
-        }
-    }, 
     database::establish_connection,
 };
 
@@ -54,15 +47,15 @@ pub struct UserInvoice {
 #[get("/{username}")]
 pub async fn get_return_reservations(username: Path<String>) -> impl Responder {
     let conn = &mut establish_connection();
-    let user = get_user_by_username(conn, &username);
-    let invoices = get_invoices(conn, &user.id);
+    let user = Users::get_user_by_username(conn, &username);
+    let invoices = ReturnReservation::get_invoices(conn, &user.id);
     Json(invoices)
 }
 
 #[post("/{username}")]
 pub async fn create_return_reservation(username: Path<String>, payload: Json<InvoicePayload>) -> impl Responder {
     let conn = &mut establish_connection();
-    let user = get_user_by_username(conn, &username);
+    let user = Users::get_user_by_username(conn, &username);
 
 
     let new_invoice = NewReturnReservation {
@@ -72,22 +65,22 @@ pub async fn create_return_reservation(username: Path<String>, payload: Json<Inv
         user_id: &user.id,
         time: None
     };
-    let invoice = create_invoice(conn, &new_invoice);
+    let invoice = ReturnReservation::create_invoice(conn, &new_invoice);
     Json(invoice)
 }
 
 #[get("/{username}/{invoice_id}")]
 pub async fn get_return_reservation(path: Path<UserInvoice>) -> impl Responder {
     let conn = &mut establish_connection();
-    let user = get_user_by_username(conn, &path.username);
-    let invoice = get_invoice(conn, &path.invoice_id, &user.id);
+    let user = Users::get_user_by_username(conn, &path.username);
+    let invoice = ReturnReservation::get_invoice(conn, &path.invoice_id, &user.id);
     Json(invoice)
 }
 
 #[put("/{username}/{invoice_id}")]
 pub async fn edit_return_reservation(path: Path<UserInvoice>, payload: Json<InvoicePayload>) -> impl Responder {
     let conn = &mut establish_connection();
-    get_user_by_username(conn, &path.username);
+    Users::get_user_by_username(conn, &path.username);
 
     let new_invoice = NewReturnReservation {
         full_tank: &payload.full_tank,
@@ -97,7 +90,7 @@ pub async fn edit_return_reservation(path: Path<UserInvoice>, payload: Json<Invo
         time: None
     };
     
-    edit_invoice(conn, &new_invoice);
+    ReturnReservation::edit_invoice(conn, &new_invoice);
     
     Json(
         MessageResponse {
@@ -109,9 +102,9 @@ pub async fn edit_return_reservation(path: Path<UserInvoice>, payload: Json<Invo
 #[delete("/{username}/{invoice_id}")]
 pub async fn delete_return_reservation(path: Path<UserInvoice>) -> impl Responder {
     let conn = &mut establish_connection();
-    let user = get_user_by_username(conn, &path.username);
+    let user = Users::get_user_by_username(conn, &path.username);
 
-    delete_invoice(conn, &path.invoice_id, &user.id);
+    ReturnReservation::delete_invoice(conn, &path.invoice_id, &user.id);
     Json(
         MessageResponse {
             message: "Berhasil dihapus.".to_string()
