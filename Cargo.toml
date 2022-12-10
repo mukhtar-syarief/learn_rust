@@ -1,7 +1,11 @@
 [package]
-name = "learn_rust"
+name = "learn_basic_rust"
 version = "0.1.0"
 edition = "2021"
+description = "This learning is not perfect to use. It's just to adapt the author to using Rust language."
+authors = ["muchtar.syarief <muchtar.syariefudin1511@gmail.com>"]
+license = "MIT OR Apache-2.0"
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

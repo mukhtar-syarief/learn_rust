@@ -50,8 +50,7 @@ async fn tets_api() -> String {
 }
 
 
-async fn test_redoc() -> Result<HttpResponse> {
-
+async fn redoc() -> Result<HttpResponse> {
     Ok(HttpResponse::build(StatusCode::OK)
         .content_type("text/html; charset=utf-8")
         .body(include_str!("static/redoc.html")))
@@ -108,7 +107,7 @@ async fn main() -> std::io::Result<()> {
                     .service(edit_return_reservation)
                     .service(delete_return_reservation)
             )
-            .route("/redoc", web::get().to(test_redoc))
+            .route("/redoc", web::get().to(redoc))
             .service(
                 SwaggerUi::new("/docs/{_:.*}")
                 .url("/api-doc/openapi.json", ApiDoc::openapi()),
