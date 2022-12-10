@@ -6,6 +6,7 @@ use utoipa::ToSchema;
 use crate::{
     database::establish_connection,
     models::cars::Cars,
+    repos::cars_repo::CarsRepo
 };
 
 
@@ -34,7 +35,7 @@ pub struct MessageResponse {
 #[get("")]
 pub async fn get_all_cars_type() -> actix_web::Result<impl Responder>{
     let conn: &mut PgConnection = &mut establish_connection();
-    let cars: Vec<Cars> = Cars::get_all_type(conn);
+    let cars: Vec<Cars> = CarsRepo::get_all_type(conn);
     Ok(Json(cars))
 }
 
@@ -52,7 +53,7 @@ pub async fn get_all_cars_type() -> actix_web::Result<impl Responder>{
 #[post("")]
 pub async fn create_car_type(payload: Json<CarPayload>) -> actix_web::Result<impl Responder> {
     let conn: &mut PgConnection = &mut establish_connection();
-    let car: Cars = Cars::create_new_car(conn, &payload.type_);
+    let car: Cars = CarsRepo::create_new_car(conn, &payload.type_);
 
     Ok(Json(car))
 }
@@ -73,7 +74,7 @@ pub async fn create_car_type(payload: Json<CarPayload>) -> actix_web::Result<imp
 #[delete("/{type}")]
 pub async fn delete_car_type(type_: web::Path<String>) -> actix_web::Result<impl Responder>{
     let conn: &mut PgConnection = &mut establish_connection();
-    Cars::delete_type(conn, &type_);
+    CarsRepo::delete_type(conn, &type_);
     Ok(Json(MessageResponse{
         message: "Tipe mobil dihapus".to_string()
     }))

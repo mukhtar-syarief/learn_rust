@@ -1,7 +1,9 @@
 use crate::models::users::{Users, NewUser};
 use diesel::prelude::*;
 
-impl Users {
+pub struct UserRepo;
+
+impl UserRepo {
     pub fn create_new_user(conn: &mut PgConnection, username: &String, password: &String) -> Users {
         use crate::schema::users;
     

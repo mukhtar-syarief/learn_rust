@@ -4,7 +4,10 @@ use crate::schema::reservations::dsl::*;
 use crate::schema::reservations;
 use crate::models::reservation::{Reservation, NewReservation};
 
-impl Reservation {
+
+pub struct ReservationRepo;
+
+impl ReservationRepo {
     pub fn get_user_reservation(conn: &mut PgConnection, id_user: &i32) -> Vec<Reservation> {
         reservations.filter(user_id.eq(id_user)).load::<Reservation>(conn).expect("Kesalahan pada server.")
     }

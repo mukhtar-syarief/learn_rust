@@ -2,8 +2,10 @@ use diesel::{prelude::*};
 
 use crate::models::cars::{NewCars, Cars};
 
+pub struct CarsRepo;
 
-impl Cars {
+
+impl CarsRepo {
     pub fn get_all_type(conn: &mut PgConnection) -> Vec<Cars>{
         use crate::schema::cars::dsl::*;
     

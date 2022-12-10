@@ -4,7 +4,10 @@ use diesel::prelude::*;
 use crate::models::location::{Location, Newlocation};
 
 
-impl Location {
+pub struct LocationRepo;
+
+
+impl LocationRepo {
     pub fn get_all_location(conn: &mut PgConnection) -> Vec<Location> {
         use crate::schema::locations::dsl::*;
     

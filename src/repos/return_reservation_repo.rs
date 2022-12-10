@@ -6,7 +6,9 @@ use crate::{
     models::return_reservation::{ReturnReservation, NewReturnReservation},
 };
 
-impl ReturnReservation {
+pub struct ReturnReservationRepo;
+
+impl ReturnReservationRepo {
     pub fn get_invoices(conn: &mut PgConnection, id_user: &i32) -> Vec<ReturnReservation> {
         let invoices = return_reservation.filter(user_id.eq(id_user))
             .load(conn)
