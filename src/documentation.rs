@@ -8,7 +8,6 @@ use crate::{
         location_api,
         reservation_api,
         return_reservation_api as invoice_api,
-
     },
     models::{
         users as user_model,

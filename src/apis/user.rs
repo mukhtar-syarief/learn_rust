@@ -131,3 +131,14 @@ pub async fn delete_this_user(username: web::Path<String>) -> actix_web::Result<
         MessageResponse { message: String::from("User berhasil dihapus") }
     ))
 }
+
+pub fn users_api_services(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::scope("/user")
+            .service(create_user)
+            .service(get_user)
+            .service(get_all_user)
+            .service(update_user)
+            .service(delete_this_user)
+    );
+}

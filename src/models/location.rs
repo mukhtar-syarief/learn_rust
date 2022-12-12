@@ -13,6 +13,7 @@ pub struct Location {
 }
 
 
+#[derive(Serialize)]
 #[derive(Insertable)]
 #[diesel(table_name = locations)]
 pub struct Newlocation<'a> {

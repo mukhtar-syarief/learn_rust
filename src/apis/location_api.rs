@@ -14,12 +14,12 @@ use crate::repos::location_repo::LocationRepo;
 #[derive(Serialize, Deserialize)]
 #[derive(ToSchema)]
 pub struct NewLoc {
-    region: String
+    pub region: String
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct MessageResponse {
-    message: String
+    pub message: String
 } 
 
 
@@ -99,4 +99,14 @@ pub async fn delete_loc(id: web::Path<i32>) -> actix_web::Result<impl Responder>
     Ok(Json(MessageResponse{
         message: "Lokasi berhasil dihapus".to_string()
     }))
+}
+
+pub fn location_api_service(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::scope("/location")
+            .service(get_locations)
+            .service(create_location) 
+            .service(delete_loc) 
+            .service(get_loc)
+    );
 }

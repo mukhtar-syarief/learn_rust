@@ -153,6 +153,7 @@ pub async fn get_reservation(
 ) -> actix_web::Result<impl Responder> {
     let conn = &mut establish_connection();
     UserRepo::get_user_by_username(conn, &path.username);
+    println!("{}", "asdqadyqiuwd");
 
     let reservation = reservations.filter(id.eq(&path.reservation_id))
         .first::<Reservation>(conn).expect("Kesalahan pada server");
@@ -256,3 +257,14 @@ pub async fn delete_this_reservation(path: web::Path<UserReservation>) -> impl R
         }
     )
 }   
+
+pub fn reservation_api_services(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::scope("/reservation")
+            .service(get_reservations)
+            .service(get_reservation)
+            .service(create_user_reservation)
+            .service(edit_this_reservation)
+            .service(delete_this_reservation)
+    );
+}

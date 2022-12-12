@@ -18,6 +18,7 @@ pub struct Reservation {
 }
 
 #[derive(Insertable, AsChangeset)]
+#[derive(Serialize)]
 #[diesel(table_name = reservations)]
 pub struct NewReservation<'a> {
     pub vehicle_type_id: Option<&'a i32>,

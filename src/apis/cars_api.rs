@@ -79,3 +79,13 @@ pub async fn delete_car_type(type_: web::Path<String>) -> actix_web::Result<impl
         message: "Tipe mobil dihapus".to_string()
     }))
 }
+
+
+pub fn cars_api_services(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::scope("/cars")
+        .service(get_all_cars_type)
+        .service(create_car_type)
+        .service(delete_car_type)
+    );
+}
